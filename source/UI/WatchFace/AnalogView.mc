@@ -152,18 +152,18 @@ class AnalogView extends WatchUi.WatchFace {
         var bottomPosition = [half,quarter2];
         var leftPosition = [quarter1, half];
         var rightPosition = [quarter2, half];
-        drawWidgetByName(dc,_settings.getWidgetTop(_isAwake),topPosition);
-        drawWidgetByName(dc,_settings.getWidgetBottom(_isAwake),bottomPosition);
-        drawWidgetByName(dc,_settings.getWidgetLeft(_isAwake),leftPosition);
-        drawWidgetByName(dc,_settings.getWidgetRight(_isAwake),rightPosition);
+        drawWidgetByName(dc,_settings.getOption("wgt_top", _isAwake),topPosition);
+        drawWidgetByName(dc,_settings.getOption("wgt_bottom", _isAwake),bottomPosition);
+        drawWidgetByName(dc,_settings.getOption("wgt_left", _isAwake),leftPosition);
+        drawWidgetByName(dc,_settings.getOption("wgt_right", _isAwake),rightPosition);
 
         _watchHands[:hour_hand].render(dc);
         _watchHands[:minute_hand].render(dc);
-        if(_settings.getShowSeconds(_isAwake))
+        if(_settings.getOption("seconds", true))
         {
             _watchHands[:second_hand].render(dc);
         }
-        if(_settings.getFaceWatch(_isAwake)== SettingsProvider.FHandsDigits)
+        if(_settings.getOption("face_watch", _isAwake)== SettingsProvider.FHandsDigits)
         {
             var hCoords = _watchHands[:hour_hand].getHandCaptionCoordinates(half-45);
             var mCoords = _watchHands[:minute_hand].getHandCaptionCoordinates(half-25);
@@ -181,7 +181,7 @@ class AnalogView extends WatchUi.WatchFace {
         var info = Gregorian.info(Time.now(), Time.FORMAT_LONG);
         var dateStr = Lang.format("$1$ $2$", [info.day_of_week.toUpper(), info.day]);
 
-        dc.setColor(_settings.getPrimaryColor(_isAwake), Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_settings.getOption("primary_color", _isAwake), Graphics.COLOR_TRANSPARENT);
         dc.drawText(x, y, _font, dateStr, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -189,7 +189,7 @@ class AnalogView extends WatchUi.WatchFace {
         var info = Gregorian.info(Time.now(), Time.FORMAT_LONG);
         var timeStr = Lang.format("$1$.$2$", [info.hour.format("%02d"), info.min.format("%02d")]);
 
-        dc.setColor(_settings.getPrimaryColor(_isAwake), Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_settings.getOption("primary_color", _isAwake), Graphics.COLOR_TRANSPARENT);
         dc.drawText(x, y, _font, timeStr, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -206,7 +206,7 @@ class AnalogView extends WatchUi.WatchFace {
 
     private function drawBattery(dc as Dc)
     {
-        if(_settings.getShowBatteryArc(_isAwake))
+        if(_settings.getOption("battery_arc", _isAwake))
         {
             var cX = _screenCenterPoint[0];
             var cY = _screenCenterPoint[1];
@@ -214,11 +214,11 @@ class AnalogView extends WatchUi.WatchFace {
             var startAngle = 90;
             var endAngle = startAngle - 360 * batteryValue;
             var penWidth = 2;
-            dc.setColor(_settings.getPrimaryColor(_isAwake), Graphics.COLOR_TRANSPARENT);
+            dc.setColor(_settings.getOption("primary_color", _isAwake), Graphics.COLOR_TRANSPARENT);
             dc.setPenWidth(penWidth);
             dc.drawArc(cX,cY,getScreenRelevantSize(0.5) - penWidth,Graphics.ARC_CLOCKWISE, startAngle, endAngle);
         }
-        if(_settings.getShowDaysRemained(_isAwake))
+        if(_settings.getOption("battery_days", _isAwake))
         {
             var value = System.getSystemStats().batteryInDays.toNumber();
             var angle = (value * 6) * (Math.PI/180);
@@ -261,7 +261,7 @@ class AnalogView extends WatchUi.WatchFace {
     }
 
     private function drawBackground(dc as Dc) as Void {
-        if(_settings.getFaceWatch(_isAwake) == SettingsProvider.FStandard)
+        if(_settings.getOption("face_watch", _isAwake) == SettingsProvider.FStandard)
         {
             dc.drawBitmap(0, 0, _faceBitmap);
         }

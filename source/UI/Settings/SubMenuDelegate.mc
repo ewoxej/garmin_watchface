@@ -23,63 +23,63 @@ class SubMenuDelegate extends WatchUi.Menu2InputDelegate {
                 if (item instanceof WatchUi.IconMenuItem) {
                     var customIcon = (item.getIcon() as SettingsColorIcon);
                     item.setSubLabel(customIcon.nextState());
-                    _settings.setPrimaryColor(_isAwake, customIcon.getValue());
+                    _settings.setOption(_isAwake, "primary_color", customIcon.getValue());
                     WatchUi.requestUpdate();
                 }
                 break;
             }
             case Helpers.OptionWatchFace:
             {
-                var newValue = _settings.nextFaceWatch(_isAwake);
+                var newValue = _settings.nextOption("face_watch", _isAwake);
                 item.setSubLabel(Helpers.getWatchFaceStringValue(newValue));
                 break;
             }
             case Helpers.OptionWidgets:
             {
                 var menu = new WatchUi.Menu2({:title=>"Widgets"});
-                menu.addItem(new WatchUi.MenuItem("Top widget", Helpers.getWidgetStringValue(_settings.getWidgetTop(_isAwake)), Helpers.OptionWTop, null));
-                menu.addItem(new WatchUi.MenuItem("Bottom widget", Helpers.getWidgetStringValue(_settings.getWidgetBottom(_isAwake)), Helpers.OptionWBottom, null));
-                menu.addItem(new WatchUi.MenuItem("Left widget", Helpers.getWidgetStringValue(_settings.getWidgetLeft(_isAwake)), Helpers.OptionWLeft, null));
-                menu.addItem(new WatchUi.MenuItem("Right widget", Helpers.getWidgetStringValue(_settings.getWidgetRight(_isAwake)), Helpers.OptionWRight, null));
+                menu.addItem(new WatchUi.MenuItem("Top widget", Helpers.getWidgetStringValue(_settings.getOption("wgt_top", _isAwake)), Helpers.OptionWTop, null));
+                menu.addItem(new WatchUi.MenuItem("Bottom widget", Helpers.getWidgetStringValue(_settings.getOption("wgt_bottom", _isAwake)), Helpers.OptionWBottom, null));
+                menu.addItem(new WatchUi.MenuItem("Left widget", Helpers.getWidgetStringValue(_settings.getOption("wgt_left", _isAwake)), Helpers.OptionWLeft, null));
+                menu.addItem(new WatchUi.MenuItem("Right widget", Helpers.getWidgetStringValue(_settings.getOption("wgt_right", _isAwake)), Helpers.OptionWRight, null));
                 WatchUi.pushView(menu, new $.SubMenuDelegate(_isAwake), WatchUi.SLIDE_UP);
                 break;
             }
             case Helpers.OptionShowSeconds:
             {
-                _settings.setShowSeconds((item as ToggleMenuItem).isEnabled());
+                _settings.setOption(true, "seconds",(item as ToggleMenuItem).isEnabled());
                 break;
             }
             case Helpers.OptionBatteryArc:
             {
-                _settings.setShowBatteryArc(_isAwake, (item as ToggleMenuItem).isEnabled());
+                _settings.setOption(_isAwake, "battery_arc", (item as ToggleMenuItem).isEnabled());
                 break;
             }
             case Helpers.OptionBatteryDays:
             {
-                _settings.setShowDaysRemained((item as ToggleMenuItem).isEnabled());
+                _settings.setOption(true, "battery_days", (item as ToggleMenuItem).isEnabled());
                 break;
             }
             case Helpers.OptionWTop:
             {
-                var newValue = _settings.nextWidgetTop(_isAwake);
+                var newValue = _settings.nextOption("wgt_top", _isAwake);
                 item.setSubLabel(Helpers.getWidgetStringValue(newValue));
                 break;
             }
             case Helpers.OptionWBottom:
             {
-                var newValue = _settings.nextWidgetBottom(_isAwake);
+                var newValue = _settings.nextOption("wgt_bottom", _isAwake);
                 item.setSubLabel(Helpers.getWidgetStringValue(newValue));
                 break;
             }
             case Helpers.OptionWLeft:
             {
-                var newValue = _settings.nextWidgetLeft(_isAwake);
+                var newValue = _settings.nextOption("wgt_left", _isAwake);
                 item.setSubLabel(Helpers.getWidgetStringValue(newValue));
                 break;
             }
             case Helpers.OptionWRight:
             {
-                var newValue = _settings.nextWidgetRight(_isAwake);
+                var newValue = _settings.nextOption("wgt_right", _isAwake);
                 item.setSubLabel(Helpers.getWidgetStringValue(newValue));
                 break;
             }
