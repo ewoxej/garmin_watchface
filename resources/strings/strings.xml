@@ -1,0 +1,14 @@
+<strings>
+    <string id="AppName">The New Digital</string>
+    
+    <string id="PrimaryColor">Primary color</string>    
+    <string id="AlwaysOnMode">Always on mode</string>
+    <string id="ColorOrange">Orange</string> 
+    <string id="ColorRed">Red</string> 
+    <string id="ColorGreen">Green</string> 
+    <string id="ColorBlue">Blue</string> 
+    <string id="ColorPurple">Purple</string> 
+    <string id="DigitsNearHands">Digits near hands</string>  
+    <string id="CenteredDigits">Centered digits</string>
+    <string id="NoDigits">No digits</string>              
+</strings>

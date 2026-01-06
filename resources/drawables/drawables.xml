@@ -1,0 +1,5 @@
+<drawables>
+    <bitmap id="FaceBitmap" filename="face_bitmap.bmp" /> 
+    <bitmap id="LauncherIcon" filename="icon.png" /> 
+    <bitmap id="GarminLogo" filename="logo.png" /> 
+</drawables>

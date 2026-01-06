@@ -1,0 +1,4 @@
+<fonts>
+	<font id="ledboard" filename="ledboard.fnt" filter="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!()_+-=. " />	
+	<font id="WeatherFont" filename="WeatherFont.fnt" filter="CPTFLBNR*WSrsa" />	
+</fonts>  
