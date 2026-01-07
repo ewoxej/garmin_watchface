@@ -3,38 +3,44 @@ import Toybox.Graphics;
 import Toybox.WatchUi;
 
 class SettingsColorIcon extends WatchUi.Drawable {
+    private const _colorDict = {
+        Graphics.COLOR_RED => Rez.Strings.ColorRed,
+        Graphics.COLOR_ORANGE => Rez.Strings.ColorOrange,
+        Graphics.COLOR_YELLOW => Rez.Strings.ColorYellow,
+        Graphics.COLOR_GREEN => Rez.Strings.ColorGreen,
+        Graphics.COLOR_BLUE => Rez.Strings.ColorBlue,
+        Graphics.COLOR_PURPLE  => Rez.Strings.ColorViolet
+    };
 
-    private const _colors = [Graphics.COLOR_RED, Graphics.COLOR_ORANGE, Graphics.COLOR_YELLOW, Graphics.COLOR_GREEN,
-                             Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE] as Array<Number>;
-    private const _colorStrings = ["Red", "Orange", "Yellow", "Green", "Blue", "Violet"] as Array<String>;
-    private var _index as Number;
+    private var _selectedColor as Number;
 
     public function initialize(oldColor as Number) {
         Drawable.initialize({});
-        _index = _colors.indexOf(oldColor as Number);
+        _selectedColor = oldColor;
     }
 
     public function nextState() as String {
-        _index++;
-        if (_index >= _colors.size()) {
-            _index = 0;
+        var currentIndex = _colorDict.keys().indexOf(_selectedColor);
+        currentIndex++;
+        if (currentIndex >= _colorDict.size()) {
+            currentIndex = 0;
         }
+        _selectedColor = _colorDict.keys()[currentIndex] as Number;
 
-        return _colorStrings[_index];
+        return _colorDict[_selectedColor];
     }
 
     public function getString() as String {
-        return _colorStrings[_index];
+        return _colorDict[_selectedColor];
     }
 
     public function getValue() as Number
     {
-        return _colors[_index];
+        return _selectedColor;
     }
 
     public function draw(dc as Dc) as Void {
-        var color = _colors[_index];
-        dc.setColor(color, color);
+        dc.setColor(_selectedColor, _selectedColor);
         dc.fillCircle(dc.getWidth()/2, dc.getHeight()/2, dc.getWidth()/2);
     }
 }

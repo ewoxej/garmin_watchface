@@ -13,8 +13,8 @@ class AnalogSettingsView extends WatchUi.View {
     public function onLayout(dc as Dc)
     {
         var menu = new $.AnalogSettingsMenu();
-        menu.addItem(new WatchUi.MenuItem("Awake", null, Helpers.OptionAwake, null));
-        menu.addItem(new WatchUi.MenuItem("Always on Mode", null, Helpers.OptionAlwaysOn, null));
+        menu.addItem(new WatchUi.MenuItem(WatchUi.loadResource(Rez.Strings.AwakeTitle), null, Helpers.OptionAwake, null));
+        menu.addItem(new WatchUi.MenuItem(WatchUi.loadResource(Rez.Strings.AlwaysOnTitle), null, Helpers.OptionAlwaysOn, null));
 
         WatchUi.pushView(menu, new $.AnalogSettingsMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
     }
