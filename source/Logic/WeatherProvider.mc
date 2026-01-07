@@ -1,7 +1,6 @@
-import Toybox.Graphics;
 import Toybox.Lang;
-import Toybox.System;
 import Toybox.Time;
+import Toybox.Time.Gregorian;
 import Toybox.Weather;
 
 class WeatherProvider

@@ -1,15 +1,16 @@
 import Toybox.Lang;
 import Toybox.Graphics;
 import Toybox.WatchUi;
+using Rez.Strings as Str;
 
 class SettingsColorIcon extends WatchUi.Drawable {
     private const _colorDict = {
-        Graphics.COLOR_RED => Rez.Strings.ColorRed,
-        Graphics.COLOR_ORANGE => Rez.Strings.ColorOrange,
-        Graphics.COLOR_YELLOW => Rez.Strings.ColorYellow,
-        Graphics.COLOR_GREEN => Rez.Strings.ColorGreen,
-        Graphics.COLOR_BLUE => Rez.Strings.ColorBlue,
-        Graphics.COLOR_PURPLE  => Rez.Strings.ColorViolet
+        Graphics.COLOR_RED => Str.ColorRed,
+        Graphics.COLOR_ORANGE => Str.ColorOrange,
+        Graphics.COLOR_YELLOW => Str.ColorYellow,
+        Graphics.COLOR_GREEN => Str.ColorGreen,
+        Graphics.COLOR_BLUE => Str.ColorBlue,
+        Graphics.COLOR_PURPLE  => Str.ColorViolet
     };
 
     private var _selectedColor as Number;
@@ -19,7 +20,7 @@ class SettingsColorIcon extends WatchUi.Drawable {
         _selectedColor = oldColor;
     }
 
-    public function nextState() as String {
+    public function nextState() as Symbol {
         var currentIndex = _colorDict.keys().indexOf(_selectedColor);
         currentIndex++;
         if (currentIndex >= _colorDict.size()) {
@@ -30,7 +31,7 @@ class SettingsColorIcon extends WatchUi.Drawable {
         return _colorDict[_selectedColor];
     }
 
-    public function getString() as String {
+    public function getString() as Symbol {
         return _colorDict[_selectedColor];
     }
 

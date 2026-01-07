@@ -1,22 +1,36 @@
 <strings>
     <string id="AppName">The New Digital</string>
     
-    <string id="PrimaryColor">Primary color</string>
-    <string id="FaceWatchStyle">Face watch style</string>
-    <string id="Widgets">Widgets</string>
-    <string id="ShowSeconds">Show seconds</string>
-    <string id="ShowBatteryArc">Show battery arc</string>
-    <string id="ShowDaysRemained">Show days remained</string>
+    <string id="Settings">Settings</string>
     <string id="AwakeTitle">Awake</string>
     <string id="AlwaysOnTitle">Always on</string>
-    <string id="Settings">Settings</string>
+
+    <string id="PrimaryColor">Primary color</string>
     <string id="ColorRed">Red</string> 
     <string id="ColorOrange">Orange</string> 
     <string id="ColorYellow">Yellow</string> 
     <string id="ColorGreen">Green</string> 
     <string id="ColorBlue">Blue</string> 
     <string id="ColorViolet">Violet</string> 
-    <string id="DigitsNearHands">Digits near hands</string>  
-    <string id="CenteredDigits">Centered digits</string>
-    <string id="NoDigits">No digits</string>              
+
+    <string id="WatchFace">Watch face</string>
+    <string id="WatchFaceStandard">Standard</string>
+    <string id="WatchFaceHandsDigits">Digits near hands</string>
+    <string id="WatchFaceMinimal">Minimal</string>
+
+    <string id="Widgets">Widgets</string>
+    <string id="WidgetPosTop">Top widget</string>  
+    <string id="WidgetPosBottom">Bottom widget</string>   
+    <string id="WidgetPosLeft">Left widget</string>  
+    <string id="WidgetPosRight">Right widget</string>  
+    <string id="WidgetDate">Date</string>
+    <string id="WidgetWeather">Weather</string>
+    <string id="WidgetSunset">Sunrise/sunset</string>
+    <string id="WidgetTime">Time</string>
+    <string id="WidgetBrand">Brand</string>
+    <string id="WidgetNothing">Nothing</string>   
+
+    <string id="ShowSeconds">Show seconds</string>
+    <string id="ShowBatteryArc">Show battery arc</string>
+    <string id="ShowDaysRemained">Show days remained</string>
 </strings>

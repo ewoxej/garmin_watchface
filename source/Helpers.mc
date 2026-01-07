@@ -1,26 +1,29 @@
 import Toybox.Lang;
-import Toybox.System;
+using Rez.Strings as Str;
 
 class Helpers
-{
-    static public enum {OptionAwake = 65, OptionAlwaysOn, OptionPrimaryColor,
-                        OptionWatchFace, OptionWidgets, OptionBatteryArc, OptionBatteryDays,
-                        OptionShowSeconds, OptionWTop, OptionWBottom, OptionWLeft, OptionWRight}
-                        
-    static private var watchFaceDict = {SettingsProvider.FStandard=>"Standard", 
-                    SettingsProvider.FHandsDigits=>"Digits near hands", 
-                    SettingsProvider.FMinimal=>"Minimal"};
+{                    
+    static public var configMapping = {
+        Str.PrimaryColor => "primary_color",
+        Str.WatchFace => "face_watch",
+        Str.ShowSeconds => "seconds",
+        Str.ShowBatteryArc => "battery_arc",
+        Str.ShowDaysRemained => "battery_days",
+        Str.WidgetPosTop => "wgt_top",
+        Str.WidgetPosBottom => "wgt_bottom",
+        Str.WidgetPosLeft => "wgt_left",
+        Str.WidgetPosRight => "wgt_right"};
 
-    static private var widgetsDict = {SettingsProvider.WDate=>"Date",SettingsProvider.WWeather=>"Weather",
-                   SettingsProvider.WSunset=>"Sunrise/sunset",SettingsProvider.WTime=>"Time",
-                   SettingsProvider.WNothing=>"Nothing",SettingsProvider.WBrand=>"Brand"};
-
-    static public function getWatchFaceStringValue(id as Number) as String
-    {
-        return watchFaceDict.get(id);
-    }
-    static public function getWidgetStringValue(id as Number) as String
-    {
-        return widgetsDict.get(id);
-    }
+    static public var watchFacesMapping = {
+        SettingsProvider.FHandsDigits => Str.WatchFaceHandsDigits,
+        SettingsProvider.FMinimal => Str.WatchFaceMinimal,
+        SettingsProvider.FStandard => Str.WatchFaceStandard
+    };
+    static public var widgetsMapping = {
+        SettingsProvider.WNothing => Str.WidgetNothing,
+        SettingsProvider.WDate => Str.WidgetDate,
+        SettingsProvider.WTime => Str.WidgetTime,
+        SettingsProvider.WBrand => Str.WidgetBrand,
+        SettingsProvider.WWeather => Str.WidgetWeather,
+        SettingsProvider.WSunset => Str.WidgetSunset};
 }

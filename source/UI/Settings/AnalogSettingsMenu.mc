@@ -1,13 +1,11 @@
-import Toybox.Application.Storage;
-import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.WatchUi;
-import Toybox.System;
+using Rez.Strings as Str;
 
 class AnalogSettingsMenu extends WatchUi.Menu2 {
 
     public function initialize() {
-        Menu2.initialize({:title=>WatchUi.loadResource(Rez.Strings.Settings)});
+        Menu2.initialize({:title=>WatchUi.loadResource(Str.Settings)});
     }
 }
 
@@ -17,12 +15,13 @@ class AnalogSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
         Menu2InputDelegate.initialize();
     }
 
-    public function createToggle(stringId as Symbol, optionId as Number, configId as String, defaultValue as Boolean)
+    public function createToggle(stringId as Symbol, defaultValue as Boolean)
     {
+        var configId = Helpers.configMapping[stringId];
         return new WatchUi.ToggleMenuItem(
             WatchUi.loadResource(stringId),
             null,
-            optionId,
+            stringId,
             SettingsProvider.getInstance().getOption(configId, defaultValue),
             null);
     }
@@ -32,29 +31,29 @@ class AnalogSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
         var id = menuItem.getId() as String;
 
         var settings = SettingsProvider.getInstance();
-        var isAwake = (id == Helpers.OptionAwake);
-        var isAon = (id == Helpers.OptionAlwaysOn);
+        var isAwake = (id == Str.AwakeTitle);
+        var isAon = (id == Str.AlwaysOnTitle);
         if(isAwake || isAon)
         {
-            var menuTitle = WatchUi.loadResource(isAwake ? Rez.Strings.AwakeTitle : Rez.Strings.AlwaysOnTitle);
+            var menuTitle = WatchUi.loadResource(isAwake ? Str.AwakeTitle : Str.AlwaysOnTitle);
             var menu = new WatchUi.Menu2({:title=> menuTitle});
             if(isAwake)
             {
-                var drawable = new $.SettingsColorIcon(settings.getOption("primary_color", true));
-                menu.addItem(new WatchUi.IconMenuItem(WatchUi.loadResource(Rez.Strings.PrimaryColor), drawable.getString(),
-                Helpers.OptionPrimaryColor, drawable, {:alignment=>WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_RIGHT}));
+                var drawable = new $.SettingsColorIcon(settings.getOption(Helpers.configMapping[Str.PrimaryColor], true));
+                menu.addItem(new WatchUi.IconMenuItem(WatchUi.loadResource(Str.PrimaryColor), 
+                                                      WatchUi.loadResource(drawable.getString()),
+                Str.PrimaryColor, drawable, {:alignment=>WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_RIGHT}));
             }
-            menu.addItem(new WatchUi.MenuItem(
-                WatchUi.loadResource(Rez.Strings.FaceWatchStyle),
-                Helpers.getWatchFaceStringValue(settings.getOption("face_watch", isAwake)),
-                Helpers.OptionWatchFace, null));
-            menu.addItem(new WatchUi.MenuItem(WatchUi.loadResource(Rez.Strings.Widgets), null, Helpers.OptionWidgets, null));
-            menu.addItem(createToggle(Rez.Strings.ShowBatteryArc, Helpers.OptionBatteryArc, "battery_arc", isAwake));
+            var stringName = settings.getOption(Helpers.configMapping[Str.WatchFace], isAwake);
+            var subhead = Helpers.watchFacesMapping[stringName];
+            menu.addItem(new WatchUi.MenuItem(WatchUi.loadResource(Str.WatchFace), subhead, Str.WatchFace, null));
+            menu.addItem(new WatchUi.MenuItem(WatchUi.loadResource(Str.Widgets), null, Str.Widgets, null));
+            menu.addItem(createToggle(Str.ShowBatteryArc, isAwake));
 
             if(isAwake)
             {
-                menu.addItem(createToggle(Rez.Strings.ShowSeconds, Helpers.OptionShowSeconds, "seconds", true));
-                menu.addItem(createToggle(Rez.Strings.ShowDaysRemained, Helpers.OptionBatteryDays, "battery_days", true));
+                menu.addItem(createToggle(Str.ShowSeconds, true));
+                menu.addItem(createToggle(Str.ShowDaysRemained, true));
             }
             WatchUi.pushView(menu, new $.SubMenuDelegate(isAwake), WatchUi.SLIDE_UP);
         }

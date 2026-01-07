@@ -1,6 +1,5 @@
 using Toybox.Application as App;
 
-import Toybox.Application.Storage;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
@@ -152,10 +151,10 @@ class AnalogView extends WatchUi.WatchFace {
         var bottomPosition = [half,quarter2];
         var leftPosition = [quarter1, half];
         var rightPosition = [quarter2, half];
-        drawWidgetByName(dc,_settings.getOption("wgt_top", _isAwake),topPosition);
-        drawWidgetByName(dc,_settings.getOption("wgt_bottom", _isAwake),bottomPosition);
-        drawWidgetByName(dc,_settings.getOption("wgt_left", _isAwake),leftPosition);
-        drawWidgetByName(dc,_settings.getOption("wgt_right", _isAwake),rightPosition);
+        drawWidgetByName(dc,_settings.getOption("wgt_top", _isAwake),topPosition as Array);
+        drawWidgetByName(dc,_settings.getOption("wgt_bottom", _isAwake),bottomPosition as Array);
+        drawWidgetByName(dc,_settings.getOption("wgt_left", _isAwake),leftPosition as Array);
+        drawWidgetByName(dc,_settings.getOption("wgt_right", _isAwake),rightPosition as Array);
 
         _watchHands[:hour_hand].render(dc);
         _watchHands[:minute_hand].render(dc);

@@ -88,7 +88,7 @@ class WatchHand
         return result;
     }
 
-    public function getHandCaptionCoordinates(length as Number) as Array<Number>
+    public function getHandCaptionCoordinates(length as Number) as Array
     {
         var angle = calculateAngle();
         var cos = Math.cos(angle);

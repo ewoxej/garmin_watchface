@@ -2,11 +2,7 @@
 import Toybox.Application.Storage;
 import Toybox.Graphics;
 import Toybox.Lang;
-import Toybox.Math;
-import Toybox.System;
-import Toybox.Time;
-import Toybox.Time.Gregorian;
-import Toybox.WatchUi;
+using Rez.Strings as Str;
 
 class SettingsProvider
 {
@@ -81,7 +77,7 @@ class SettingsProvider
 
     public function getArborColor(isAwake as Boolean)
     {
-        return isAwake ? (getOption("seconds", true) ? Graphics.COLOR_RED : Graphics.COLOR_DK_GRAY) : Graphics.COLOR_DK_GRAY;
+        return isAwake ? (getOption(Helpers.configMapping[Str.ShowSeconds], true) ? Graphics.COLOR_RED : Graphics.COLOR_DK_GRAY) : Graphics.COLOR_DK_GRAY;
     }
 
     public function getSecondaryColor()
@@ -91,7 +87,7 @@ class SettingsProvider
 
     public function getMaxForNextOption(name as String, isAwake as Boolean)
     {
-        return name == "face_watch" ? (isAwake ? FCount : FCountAon) : (isAwake ? WCount : WCountAon);
+        return name.equals(Helpers.configMapping[Str.WatchFace]) ? (isAwake ? FCount : FCountAon) : (isAwake ? WCount : WCountAon);
     }
 
     public function nextOption(name as String, isAwake as Boolean) as Number
