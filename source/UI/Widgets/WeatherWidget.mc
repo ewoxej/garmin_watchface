@@ -12,12 +12,14 @@ class WeatherWidget extends BaseWidget
 
     public function initialize(color as Number, font as FontResource)
     {
+        BaseWidget.initialize();
         _weatherProvider = new WeatherProvider();
         _color = color;
         _font = font;
     }
     
     public function draw(dc as G.Dc, pos as Array ) as Void {
+        BaseWidget.draw(dc, pos);
         var conditions = Weather.getCurrentConditions();
         if(conditions == null || conditions.observationLocationPosition == null
            || conditions.condition == null || conditions.temperature == null)

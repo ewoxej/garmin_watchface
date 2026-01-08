@@ -2,7 +2,7 @@ using Toybox.Graphics as G;
 import Toybox.Lang;
 
 
-class BatteryView
+class BatteryLayer
 {
     private var _screenCenterPoint as Array<Number>;
     private var _color as Number;

@@ -29,7 +29,7 @@ class TheNewDigital extends App.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
-        return [ new AnalogView() ];
+        return [ new MainView() ];
     }
 
     function getSettingsView() as Array<Views or InputDelegates>? {

@@ -12,12 +12,14 @@ class SunsetSunriseWidget extends BaseWidget
 
     public function initialize(font as FontResource, iconsFont as FontResource)
     {
+        BaseWidget.initialize();
         _weatherProvider = new WeatherProvider();
         _font = font;
         _iconsFont = iconsFont;
     }
     
     public function draw(dc as G.Dc, pos as Array) as Void {
+        BaseWidget.draw(dc, pos);
         var conditions = Weather.getCurrentConditions();
         if(conditions == null || conditions.observationLocationPosition == null)
         {

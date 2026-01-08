@@ -5,9 +5,7 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
-class WatchFaceView {
-    private enum {ShowDigitsNearHands, ShowDigitsCenter, DontShowDigits}
-
+class WatchFaceLayer {
     private var _font as FontResource?;
     private var _screenCenterPoint as Array<Number>?;
     private var _watchHands as Dictionary?;
@@ -87,8 +85,8 @@ class WatchFaceView {
         }
         if(watchFace == SettingsProvider.FHandsDigits)
         {
-            var hCoords = _watchHands[:hour_hand].getHandCaptionCoordinates(half-45);
-            var mCoords = _watchHands[:minute_hand].getHandCaptionCoordinates(half-25);
+            var hCoords = _watchHands[:hour_hand].getHandCaptionCoordinates(half-45) as Array;
+            var mCoords = _watchHands[:minute_hand].getHandCaptionCoordinates(half-25) as Array;
             var alignment = G.TEXT_JUSTIFY_VCENTER | G.TEXT_JUSTIFY_CENTER;
             dc.setColor(secondaryColor, G.COLOR_TRANSPARENT);
             dc.drawText(hCoords[0],hCoords[1],_font,System.getClockTime().hour.format("%02d"), alignment);

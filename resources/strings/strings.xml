@@ -6,6 +6,7 @@
     <string id="AlwaysOnTitle">Always on</string>
 
     <string id="PrimaryColor">Primary color</string>
+    <string id="SecondaryColor">Secondary color</string>
     <string id="ColorRed">Red</string> 
     <string id="ColorOrange">Orange</string> 
     <string id="ColorYellow">Yellow</string> 

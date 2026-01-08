@@ -11,11 +11,13 @@ class TimeWidget extends BaseWidget
 
     public function initialize(color as Number, font as FontResource)
     {
+        BaseWidget.initialize();
         _color = color;
         _font = font;
     }
 
     public function draw(dc as G.Dc, pos as Array) as Void {
+        BaseWidget.draw(dc, pos);
         var info = Gregorian.info(Time.now(), Time.FORMAT_LONG);
         var timeStr = Lang.format("$1$.$2$", [info.hour.format("%02d"), info.min.format("%02d")]);
 

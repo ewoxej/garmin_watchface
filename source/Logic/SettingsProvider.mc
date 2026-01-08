@@ -29,6 +29,8 @@ class SettingsProvider
         _settingsDict = {
         "primary_color" => Graphics.COLOR_ORANGE,
         "primary_color_aon" => Graphics.COLOR_DK_GRAY,
+        "secondary_color" => Graphics.COLOR_LT_GRAY,
+        "secondary_color_aon" => Graphics.COLOR_LT_GRAY,
         "face_watch" => FStandard,
         "face_watch_aon" => FHandsDigits,
         "seconds" => true,
@@ -84,11 +86,6 @@ class SettingsProvider
     public function getArborColor(isAwake as Boolean)
     {
         return isAwake ? (getOption(Helpers.configMapping[Str.ShowSeconds], true) ? Graphics.COLOR_RED : Graphics.COLOR_DK_GRAY) : Graphics.COLOR_DK_GRAY;
-    }
-
-    public function getSecondaryColor()
-    {
-        return Graphics.COLOR_LT_GRAY;
     }
 
     public function getMaxForNextOption(name as String, isAwake as Boolean)

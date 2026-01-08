@@ -4,8 +4,9 @@ import Toybox.Lang;
 
 class Helpers
 {                    
-    static public var configMapping = {
+    static public var configMapping as Dictionary= {
         Str.PrimaryColor => "primary_color",
+        Str.SecondaryColor => "secondary_color",
         Str.WatchFace => "face_watch",
         Str.ShowSeconds => "seconds",
         Str.ShowBatteryArc => "battery_arc",
@@ -15,12 +16,12 @@ class Helpers
         Str.WidgetPosLeft => "wgt_left",
         Str.WidgetPosRight => "wgt_right"};
 
-    static public var watchFacesMapping = {
+    static public var watchFacesMapping as Dictionary = {
         SettingsProvider.FHandsDigits => Str.WatchFaceHandsDigits,
         SettingsProvider.FMinimal => Str.WatchFaceMinimal,
         SettingsProvider.FStandard => Str.WatchFaceStandard
     };
-    static public var widgetsMapping = {
+    static public var widgetsMapping as Dictionary = {
         SettingsProvider.WNothing => Str.WidgetNothing,
         SettingsProvider.WDate => Str.WidgetDate,
         SettingsProvider.WTime => Str.WidgetTime,

@@ -1,36 +1,35 @@
 using Toybox.Application as App;
 using Rez.Strings as Str;
+using Rez.Fonts as Fonts;
+using Rez.Drawables as Imgs;
 
 import Toybox.Graphics;
 import Toybox.Lang;
-import Toybox.Math;
-import Toybox.System;
-import Toybox.Time;
-import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 
-class AnalogView extends WatchUi.WatchFace {
-    private enum {ShowDigitsNearHands, ShowDigitsCenter, DontShowDigits}
-
-    private var _font as FontResource?;
-    private var _weatherFont as FontResource?;
-    private var _faceBitmap as BitmapResource?;
-
+class MainView extends WatchUi.WatchFace {
     private var _settings as SettingsProvider?;
+    private var _res as Resources?;
     private var _isAwake as Boolean;
 
-    private var _watchFace as WatchFaceView;
+    private var _watchFace as WatchFaceLayer;
+    private var _batteryView as BatteryLayer?;
     private var _widgets as Dictionary;
     private var _widgetPositions as Dictionary?;
-    private var _batteryView as BatteryView?;
 
     public function initialize() {
         WatchFace.initialize();
 
-        _watchFace = new WatchFaceView(WatchUi.loadResource($.Rez.Fonts.ledboard));
+        _watchFace = new WatchFaceLayer(WatchUi.loadResource($.Rez.Fonts.ledboard));
         _isAwake = true;
         _widgets = { Str.WidgetPosTop => null, Str.WidgetPosBottom => null,
                      Str.WidgetPosLeft => null, Str.WidgetPosRight => null};
+    }
+
+    private function getOpt(key as Symbol)
+    {
+        var settings = SettingsProvider.getInstance();
+        return settings.getOption(Helpers.configMapping[key], _isAwake);
     }
 
     private function calculateWidgetPositions(screenWidth as Number)
@@ -48,20 +47,20 @@ class AnalogView extends WatchUi.WatchFace {
 
     public function getWidget(name as Number)
     {
-        var primaryColor = _settings.getOption("primary_color", _isAwake);
+        var primaryColor = getOpt(Str.PrimaryColor);
 
         switch(name)
         {
             case SettingsProvider.WDate:
-                return new DateWidget(primaryColor, _font);
+                return new DateWidget(primaryColor, _res.font);
             case SettingsProvider.WWeather:
-                return new WeatherWidget(_settings.getSecondaryColor(), _weatherFont);
+                return new WeatherWidget(getOpt(Str.SecondaryColor), _res.weatherFont);
             case SettingsProvider.WSunset:
-                return new SunsetSunriseWidget(_font, _weatherFont);
+                return new SunsetSunriseWidget(_res.font, _res.weatherFont);
             case SettingsProvider.WTime:
-                return new TimeWidget(primaryColor, _font);
+                return new TimeWidget(primaryColor, _res.font);
             case SettingsProvider.WBrand:
-                return new BrandWidget(WatchUi.loadResource($.Rez.Drawables.GarminLogo));
+                return new BrandWidget(_res.logo);
         }
         return null;
     }
@@ -71,21 +70,18 @@ class AnalogView extends WatchUi.WatchFace {
         for(var i = 0; i < _widgets.size(); i++)
         {
             var key = _widgets.keys()[i];
-            _widgets[key] = getWidget(_settings.getOption(Helpers.configMapping[key], _isAwake));
+            _widgets[key] = getWidget(getOpt(key as Symbol));
         }
 
-        _batteryView.updateColor(_settings.getOption("primary_color", _isAwake));
+        _batteryView.updateColor(getOpt(Str.PrimaryColor));
     }
 
     public function onLayout(dc as Dc) as Void {
-
-        _faceBitmap = WatchUi.loadResource($.Rez.Drawables.FaceBitmap);
-        _font = WatchUi.loadResource($.Rez.Fonts.ledboard) as FontResource;
-        _weatherFont = WatchUi.loadResource($.Rez.Fonts.WeatherFont) as FontResource;
-
+        _res = new Resources(WatchUi.loadResource(Fonts.ledboard), WatchUi.loadResource(Fonts.WeatherFont),
+                             WatchUi.loadResource(Imgs.FaceBitmap), WatchUi.loadResource(Imgs.GarminLogo));
         _settings = SettingsProvider.getInstance();
-        _watchFace.onLayout(dc, _settings.getSecondaryColor());
-        _batteryView = new BatteryView(dc, _settings.getOption("primary_color", _isAwake));
+        _watchFace.onLayout(dc, getOpt(Str.SecondaryColor));
+        _batteryView = new BatteryLayer(dc, getOpt(Str.PrimaryColor));
 
         _widgetPositions = calculateWidgetPositions(dc.getWidth());
         updateView();
@@ -99,7 +95,7 @@ class AnalogView extends WatchUi.WatchFace {
             updateView();
 		}
 
-        drawBackground(dc, _settings.getOption("face_watch", _isAwake));
+        drawBackground(dc, getOpt(Str.WatchFace));
 
         for(var i = 0; i < _widgets.size(); i++)
         {
@@ -110,16 +106,15 @@ class AnalogView extends WatchUi.WatchFace {
             }
         }
 
-        _watchFace.draw(dc, _settings.getOption("seconds", _isAwake), _settings.getOption("face_watch", _isAwake),
-            _settings.getSecondaryColor(), _settings.getArborColor(_isAwake));
-        _batteryView.draw(dc, _settings.getOption("battery_arc", _isAwake), 
-            _settings.getOption("battery_days", _isAwake));
+        _watchFace.draw(dc, getOpt(Str.ShowSeconds), getOpt(Str.WatchFace),
+            getOpt(Str.SecondaryColor), _settings.getArborColor(_isAwake));
+        _batteryView.draw(dc, getOpt(Str.ShowBatteryArc), getOpt(Str.ShowDaysRemained));
     }
 
     private function drawBackground(dc as Dc, watchFace as Number) as Void {
         if(watchFace == SettingsProvider.FStandard)
         {
-            dc.drawBitmap(0, 0, _faceBitmap);
+            dc.drawBitmap(0, 0, _res.faceBitmap);
         }
         else
         {
