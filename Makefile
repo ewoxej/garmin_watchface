@@ -30,9 +30,6 @@ run: build
 	$(JAVA_OPTIONS) \
 	$(SDK_HOME)/bin/monkeydo bin/$(appName).prg $(DEVICE)
 
-deploy: build
-	@cp bin/$(appName).prg $(DEPLOY)
-
 package:
 	@$(SDK_HOME)/bin/monkeyc \
 	--jungles ./monkey.jungle \

@@ -20,13 +20,21 @@ This project is an **analog watch face for Garmin devices** built with the **Con
 
 ## Requirements
 To build this project, you need:
-- **Garmin Connect IQ SDK**
+- **[Garmin Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/)**
 - **Garmin developer key**
+You can generate a developer key to sign apps when they're compiled and packaged. The required key must be a RSA 4096 bit private key.
+- **JDK**(see Connect IQ SDK documentaion)
 
 All required paths and keys are configured in the `properties.mk` file.
 
-## Build
-After installing the Connect IQ SDK and configuring `properties.mk`, the project can be built using the standard Garmin build tools.
+## Build and run
+Open terminal in the project folder and type:
+`make target` where target could be one of the following values:
+- build: only build *.prg
+- buildall: build *.prg for all available devices
+- run: build and run in emulator
+- package: prepare package for publishing in the store
 
-## Notes
-This project is intended for educational and personal use.
+For example:
+
+`make run`
