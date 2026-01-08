@@ -1,7 +1,9 @@
+using Rez.Strings as Str;
+
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.WatchUi;
-using Rez.Strings as Str;
+
 
 class AnalogSettingsView extends WatchUi.View {
 

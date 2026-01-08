@@ -1,5 +1,6 @@
-import Toybox.Lang;
 using Rez.Strings as Str;
+
+import Toybox.Lang;
 
 class Helpers
 {                    

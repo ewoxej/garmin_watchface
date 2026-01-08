@@ -13,18 +13,28 @@ class AnalogView extends WatchUi.WatchFace {
 
     private var _font as FontResource?;
     private var _weatherFont as FontResource?;
-    private var _faceBitmap as BitmapResource?;
+
     private var _garminLogo as BitmapResource?;
     private var _screenCenterPoint as Array<Number>?;
-    private var _watchHands as Dictionary?;
     private var _screenWidth as Number?;
-    private var _weatherProvider as WeatherProvider?;
     private var _settings as SettingsProvider?;
+    private var _faceBitmap as BitmapResource?;
 
     private var _isAwake as Boolean;
+    private var _watchFace as WatchFaceView;
+    private var _dateWidget as DateWidget;
+    private var _timeWidget as TimeWidget;
+    private var _weatherWidget as WeatherWidget;
+    private var _sunsetSunriseWidget as SunsetSunriseWidget;
 
     public function initialize() {
         WatchFace.initialize();
+
+        _watchFace = new WatchFaceView(WatchUi.loadResource($.Rez.Fonts.ledboard));
+        _dateWidget = new DateWidget();
+        _timeWidget = new TimeWidget();
+        _weatherWidget = new WeatherWidget();
+        _sunsetSunriseWidget = new SunsetSunriseWidget();
         _isAwake = true;
     }
 
@@ -33,64 +43,22 @@ class AnalogView extends WatchUi.WatchFace {
         return (_screenWidth * factor).toNumber();
     }
 
-    private function dictionaryCopy(dict as Dictionary)
-    {
-        var newDict = {};
-        var keys = dict.keys();
-        var values = dict.values();
-        for(var i = 0; i < dict.size(); ++ i)
-        {
-            newDict.put(keys[i], values[i]);
-        }
-        return newDict;
-    }
-
     public function onLayout(dc as Dc) as Void {
 
+        _faceBitmap = WatchUi.loadResource($.Rez.Drawables.FaceBitmap);
         _font = WatchUi.loadResource($.Rez.Fonts.ledboard) as FontResource;
         _weatherFont = WatchUi.loadResource($.Rez.Fonts.WeatherFont) as FontResource;
-        _faceBitmap = WatchUi.loadResource($.Rez.Drawables.FaceBitmap) as BitmapResource;
         _garminLogo = WatchUi.loadResource($.Rez.Drawables.GarminLogo) as BitmapResource;
         _screenCenterPoint = [dc.getWidth() / 2, dc.getHeight() / 2] as Array<Number>;
         _screenWidth = dc.getWidth();
 
         _settings = SettingsProvider.getInstance();
-        _weatherProvider = new WeatherProvider();
-
-        var baseHandConfig =
-        {
-            :centerPoint => _screenCenterPoint,
-            :tailLength => 20,
-            :enableShadow => true,
-            :color => _settings.getSecondaryColor()
-        };
-
-        var hourHandConfig = dictionaryCopy(baseHandConfig);
-        hourHandConfig.put(:type,WatchHand.Hour);
-        hourHandConfig.put(:beginWidth,10);
-        hourHandConfig.put(:endWidth,2);
-        hourHandConfig.put(:handLength,getScreenRelevantSize(0.28));
-
-        var minuteHandConfig = dictionaryCopy(baseHandConfig);
-        minuteHandConfig.put(:type,WatchHand.Minute);
-        minuteHandConfig.put(:beginWidth,6);
-        minuteHandConfig.put(:endWidth,1);
-        minuteHandConfig.put(:handLength,getScreenRelevantSize(0.42));
-
-        var secondHandConfig = dictionaryCopy(baseHandConfig);
-        secondHandConfig.put(:type,WatchHand.Second);
-        secondHandConfig.put(:beginWidth,2);
-        secondHandConfig.put(:color,Graphics.COLOR_RED);
-        secondHandConfig.remove(:enableShadow);
-        secondHandConfig.put(:handLength,getScreenRelevantSize(0.48));
-
-        _watchHands = {:hour_hand => new WatchHand(hourHandConfig), 
-                       :minute_hand => new WatchHand(minuteHandConfig),
-                       :second_hand => new WatchHand(secondHandConfig)};
+        _watchFace.onLayout(dc, _settings.getSecondaryColor());
     }
 
     private function drawWidgetByName(dc as Dc, name as Number,pos as Array)
     {
+        var primaryColor = _settings.getOption("primary_color", _isAwake);
         switch(name)
         {
             case SettingsProvider.WNothing:
@@ -99,22 +67,22 @@ class AnalogView extends WatchUi.WatchFace {
             }
             case SettingsProvider.WDate:
             {
-                drawDateString(dc,pos[0],pos[1]);
+                _dateWidget.draw(dc, pos[0], pos[1], primaryColor, _font);
                 break;
             }
             case SettingsProvider.WWeather:
             {
-                drawWeatherWidget(dc,pos[0],pos[1]);
+                _weatherWidget.draw(dc, pos[0], pos[1], _settings.getSecondaryColor(), _weatherFont);
                 break;
             }
             case SettingsProvider.WSunset:
             {
-                drawSunsetSunrise(dc, pos[0],pos[1]);
+                _sunsetSunriseWidget.draw(dc, pos[0], pos[1], _font, _weatherFont);
                 break;
             }
             case SettingsProvider.WTime:
             {
-                drawTimeString(dc,pos[0],pos[1]);
+                _timeWidget.draw(dc, pos[0], pos[1], primaryColor, _font);
                 break;
             }
             case SettingsProvider.WBrand:
@@ -139,13 +107,11 @@ class AnalogView extends WatchUi.WatchFace {
 			_settings.retrieveSettings();
 		}
 
-        var clockTime = System.getClockTime();
-
         var quarter1 = getScreenRelevantSize(0.25);
         var quarter2 = getScreenRelevantSize(0.75);
         var half = getScreenRelevantSize(0.5);
 
-        drawBackground(dc);
+        drawBackground(dc, _settings.getOption("face_watch", _isAwake));
 
         var topPosition = [half, quarter1];
         var bottomPosition = [half,quarter2];
@@ -156,51 +122,21 @@ class AnalogView extends WatchUi.WatchFace {
         drawWidgetByName(dc,_settings.getOption("wgt_left", _isAwake),leftPosition as Array);
         drawWidgetByName(dc,_settings.getOption("wgt_right", _isAwake),rightPosition as Array);
 
-        _watchHands[:hour_hand].render(dc);
-        _watchHands[:minute_hand].render(dc);
-        if(_settings.getOption("seconds", true))
-        {
-            _watchHands[:second_hand].render(dc);
-        }
-        if(_settings.getOption("face_watch", _isAwake)== SettingsProvider.FHandsDigits)
-        {
-            var hCoords = _watchHands[:hour_hand].getHandCaptionCoordinates(half-45);
-            var mCoords = _watchHands[:minute_hand].getHandCaptionCoordinates(half-25);
-            var alignment = Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER;
-            dc.setColor(_settings.getSecondaryColor(), Graphics.COLOR_TRANSPARENT);
-            dc.drawText(hCoords[0],hCoords[1],_font,System.getClockTime().hour.format("%02d"), alignment);
-            dc.drawText(mCoords[0],mCoords[1],_font,System.getClockTime().min.format("%02d"), alignment);
-        }
-
-        drawArbor(dc);
+        _watchFace.draw(dc, _settings.getOption("seconds", true), _settings.getOption("face_watch", _isAwake),
+        _settings.getSecondaryColor(), _settings.getArborColor(_isAwake));
         drawBattery(dc);
     }
 
-    private function drawDateString(dc as Dc, x as Number, y as Number) as Void {
-        var info = Gregorian.info(Time.now(), Time.FORMAT_LONG);
-        var dateStr = Lang.format("$1$ $2$", [info.day_of_week.toUpper(), info.day]);
-
-        dc.setColor(_settings.getOption("primary_color", _isAwake), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y, _font, dateStr, Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    private function drawTimeString(dc as Dc, x as Number, y as Number) as Void {
-        var info = Gregorian.info(Time.now(), Time.FORMAT_LONG);
-        var timeStr = Lang.format("$1$.$2$", [info.hour.format("%02d"), info.min.format("%02d")]);
-
-        dc.setColor(_settings.getOption("primary_color", _isAwake), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y, _font, timeStr, Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    private function drawArbor(dc as Dc) as Void
-    {
-        var x = _screenCenterPoint[0];
-        var y = _screenCenterPoint[1];
-        var arborSize = 7;
-        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
-        dc.fillCircle(x, y, arborSize);
-        dc.setColor(_settings.getArborColor(_isAwake),Graphics.COLOR_BLACK);
-        dc.drawCircle(x, y, arborSize);
+    private function drawBackground(dc as Dc, watchFace as Number) as Void {
+        if(watchFace == SettingsProvider.FStandard)
+        {
+            dc.drawBitmap(0, 0, _faceBitmap);
+        }
+        else
+        {
+            dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+            dc.fillRectangle(0, 0, dc.getWidth(), dc.getHeight());
+        }
     }
 
     private function drawBattery(dc as Dc)
@@ -227,47 +163,6 @@ class AnalogView extends WatchUi.WatchFace {
             var x = (cos-(-length)*sin+0.5) + _screenCenterPoint[0];
             var y = (sin+(-length)*cos+0.5) + _screenCenterPoint[1];
             dc.fillCircle(x, y, 3);
-        }
-    }
-
-    private function drawSunsetSunrise(dc as Dc, x as Number, y as Number) as Void {
-
-        var conditions = Weather.getCurrentConditions();
-        if(conditions == null || conditions.observationLocationPosition == null)
-        {
-            return;
-        }
-
-        var sunEventInfo = _weatherProvider.getNextSunEvent(conditions);
-        var eventTypeDict = {WeatherProvider.Sunrise => "r", WeatherProvider.Sunset => "s"};
-        var dataString = sunEventInfo[:timeInfo].hour.format("%02d")+"."+sunEventInfo[:timeInfo].min.format("%02d");
-        dc.drawText(x,y,_font, dataString, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(x,y-70,_weatherFont, eventTypeDict.get(sunEventInfo[:eventType]), Graphics.TEXT_JUSTIFY_CENTER);        
-    }
-
-    private function drawWeatherWidget(dc as Dc, x as Number, y as Number) as Void
-    {
-        var conditions = Weather.getCurrentConditions();
-        if(conditions == null || conditions.observationLocationPosition == null
-           || conditions.condition == null || conditions.temperature == null)
-        {
-            return;
-        }
-        var resultString = _weatherProvider.matchWeatherSymbol(conditions);
-        dc.setColor(_settings.getSecondaryColor(), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x,y,Graphics.FONT_SYSTEM_XTINY,conditions.temperature.toString()+"°C",Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(x,y-95,_weatherFont, resultString, Graphics.TEXT_JUSTIFY_CENTER); 
-    }
-
-    private function drawBackground(dc as Dc) as Void {
-        if(_settings.getOption("face_watch", _isAwake) == SettingsProvider.FStandard)
-        {
-            dc.drawBitmap(0, 0, _faceBitmap);
-        }
-        else
-        {
-            dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
-            dc.fillRectangle(0, 0, dc.getWidth(), dc.getHeight());
         }
     }
 

@@ -1,7 +1,8 @@
+using Rez.Strings as Str;
+
 import Toybox.Lang;
 import Toybox.Graphics;
 import Toybox.WatchUi;
-using Rez.Strings as Str;
 
 class SettingsColorIcon extends WatchUi.Drawable {
     private const _colorDict = {

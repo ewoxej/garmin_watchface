@@ -1,8 +1,9 @@
+using Rez.Strings as Str;
 
 import Toybox.Application.Storage;
 import Toybox.Graphics;
 import Toybox.Lang;
-using Rez.Strings as Str;
+
 
 class SettingsProvider
 {
