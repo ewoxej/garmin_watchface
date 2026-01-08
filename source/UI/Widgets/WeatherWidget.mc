@@ -4,16 +4,20 @@ import Toybox.Lang;
 import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 
-class WeatherWidget
+class WeatherWidget extends BaseWidget
 {
     private var _weatherProvider as WeatherProvider;
+    private var _color as Number;
+    private var _font as FontResource;
 
-    public function initialize()
+    public function initialize(color as Number, font as FontResource)
     {
         _weatherProvider = new WeatherProvider();
+        _color = color;
+        _font = font;
     }
     
-    public function draw(dc as G.Dc, x as Number, y as Number, color as Number, font as WatchUi.FontResource) as Void {
+    public function draw(dc as G.Dc, pos as Array ) as Void {
         var conditions = Weather.getCurrentConditions();
         if(conditions == null || conditions.observationLocationPosition == null
            || conditions.condition == null || conditions.temperature == null)
@@ -21,8 +25,8 @@ class WeatherWidget
             return;
         }
         var resultString = _weatherProvider.matchWeatherSymbol(conditions);
-        dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x,y,Graphics.FONT_SYSTEM_XTINY,conditions.temperature.toString()+"°C",Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(x,y-95,font, resultString, Graphics.TEXT_JUSTIFY_CENTER); 
+        dc.setColor(_color, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(pos[0],pos[1],Graphics.FONT_SYSTEM_XTINY,conditions.temperature.toString()+"°C",Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(pos[0],pos[1]-95,_font, resultString, Graphics.TEXT_JUSTIFY_CENTER); 
     }
 }

@@ -28,20 +28,25 @@ class SettingsProvider
     {
         _settingsDict = {
         "primary_color" => Graphics.COLOR_ORANGE,
+        "primary_color_aon" => Graphics.COLOR_DK_GRAY,
         "face_watch" => FStandard,
-        "seconds" => true,
-        "battery_arc" => true,
-        "battery_days" => true,
-        "wgt_top" => WDate,
-        "wgt_bottom" => WSunset,
-        "wgt_left" => WBrand,
-        "wgt_right" => WWeather,
         "face_watch_aon" => FHandsDigits,
+        "seconds" => true,
+        "seconds_aon" => false,
+        "battery_arc" => true,
         "battery_arc_aon" => true,
+        "battery_days" => true,
+        "battery_days_aon" => false,
+        "wgt_top" => WDate,
         "wgt_top_aon" => WDate,
+        "wgt_bottom" => WSunset,
         "wgt_bottom_aon" => WTime,
+        "wgt_left" => WBrand,
         "wgt_left_aon" => WNothing,
+        "wgt_right" => WWeather,
         "wgt_right_aon" => WNothing};
+
+        retrieveSettings();
     }
 
 	public function retrieveSettings() {
